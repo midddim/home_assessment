@@ -33,6 +33,7 @@ export class HomePage extends BasePage {
     await this.homeHeaderSearchField.click();
     await this.homeHeaderSearchField.fill(searchQuery);
     await this.homeHeaderSearchField.press('Enter');
+    await this.page.waitForLoadState('domcontentloaded');
   }
 
   async filterCourseTypeBy(type: string) {
@@ -40,5 +41,6 @@ export class HomePage extends BasePage {
     const searchType: Locator =  this.page.locator(`//*[@id="${type}"]/../label`);
     await searchType.waitFor();
     await searchType.click();
+    await this.page.waitForLoadState('domcontentloaded');
   }
 }
