@@ -20,8 +20,6 @@ export class BasePage {
     if (!this.path) {
       throw new Error("Initializing a page object with a root path");
     }
-    await this.page.goto(this.path, {
-      waitUntil: 'domcontentloaded',
-    });
+    await this.page.goto(this.path);
   }
 }
