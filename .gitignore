@@ -1,5 +1,9 @@
 /.idea/
 
+# dotenv environment variables file
+*.env
+.env.test
+
 # Playwright
 node_modules/
 /test-results/
