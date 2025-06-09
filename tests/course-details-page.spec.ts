@@ -1,28 +1,14 @@
-import { test, expect } from '@playwright/test';
-import { CourseDetailsPage } from "../pages/course-details-page/course-details-page"
+import { test, expect } from './fixtures';
 
-test.describe("Course Details page", () => {
-  let courseDetailsPage: CourseDetailsPage;
-  const courseId: string = 'quality-assurance-qa-techniques-and-methodologies';
-
-  test.beforeEach(async ({page}) => {
-    courseDetailsPage = new CourseDetailsPage(page, courseId);
-    await courseDetailsPage.open();
-  });
-
-  test.afterEach(async ({page}) => {
-    await page.close();
-  });
-
-  test.setTimeout(60000);
-  test('has title and rating', {tag: '@smoke'}, async ({ page }) => {
+test.describe('Course Details page', () => {
+  test('has title and rating @C2717', async ({ courseDetailsPage }) => {
     await courseDetailsPage.toBeDisplayed();
-
-    await expect(page).toHaveTitle('Quality Assurance (QA) Techniques | Free Online Course | Alison'); // TODO Replace text with variable
+    await expect(courseDetailsPage.page).toHaveTitle(
+      'Quality Assurance (QA) Techniques | Free Online Course | Alison'
+    );
   });
 
-  test.setTimeout(60000);
-  test('search for courses on a specific topic', {tag: '@smoke'}, async ({ page }) => {
-    expect(page.url(), "URL should end with search query").toContain(`/course/${courseId}`);
+  test('search for courses on a specific topic @C2718', async ({ courseDetailsPage }) => {
+    await expect(courseDetailsPage.page.url()).toContain(`/course/quality-assurance-qa-techniques-and-methodologies`);
   });
 });
