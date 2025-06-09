@@ -7,7 +7,7 @@ test.describe("Home page", () => {
     await expect(page).toHaveTitle('Alison | Free Online Courses & Online Learning'); // TODO Replace text with variable
   });
 
-  test('search for courses on a specific topic @C2713', {tag: '@smoke'}, async ({ homePage, page }) => {
+  test('search for courses on a specific topic @C2714', {tag: '@smoke'}, async ({ homePage, page }) => {
     const searchQuery: string = 'javascript';
 
     await homePage.searchCoursesBy(searchQuery);
