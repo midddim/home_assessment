@@ -2,12 +2,12 @@ import { test as base } from '@playwright/test';
 import { HomePage } from "../pages/home-page/home-page";
 import { CourseDetailsPage } from '../pages/course-details-page/course-details-page';
 
-type MyFixtures = {
+type UIFixtures = {
     homePage: HomePage;
     courseDetailsPage: CourseDetailsPage;
 };
 
-export const test = base.extend<MyFixtures>({
+export const test = base.extend<UIFixtures>({
     homePage: async ({ page }, use) => {
         const homePage = new HomePage(page);
         await homePage.open();
