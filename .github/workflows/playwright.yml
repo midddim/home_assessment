@@ -19,6 +19,10 @@ on:
         description: 'Testomat.io API token (used if not defined in secrets)'
         required: false
         default: ''
+      tests:
+        description: 'Testomat.io test IDs separated by | (e.g. Taf785fb9|T98ad9896)'
+        required: false
+        default: ''
 
 jobs:
   test:
@@ -50,15 +54,12 @@ jobs:
         run: |
           if [ "${{ github.event.inputs.grep }}" != "" ]; then
             npx playwright test --grep "${{ github.event.inputs.grep }}"
+          elif [ "${{ github.event.inputs.tests }}" != "" ]; then
+            echo "Running specific tests from Testomat.io: ${{ github.event.inputs.tests }}"
+            npx playwright test --grep "${{ github.event.inputs.tests }}"
           else
             npx playwright test
           fi
-
-      - name: Debug list test-results
-        run: ls -la test-results || echo "No test-results dir found"
-
-      - name: Debug list html report
-        run: ls -la playwright-report || echo "No html report found"
 
       - name: Send test results to Testomat.io
         run: |
