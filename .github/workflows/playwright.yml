@@ -45,10 +45,10 @@ jobs:
             npx playwright test
           fi
 
-      - name: Debug: list test-results
+      - name: Debug list test-results
         run: ls -la test-results || echo "No test-results dir found"
 
-      - name: Debug: list html report
+      - name: Debug list html report
         run: ls -la playwright-report || echo "No html report found"
 
       - name: Send test results to Testomat.io
