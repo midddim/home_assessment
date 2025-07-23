@@ -22,6 +22,7 @@
   "homepage": "https://github.com/dobrinindima/home_assessment#readme",
   "devDependencies": {
     "@playwright/test": "^1.52.0",
+    "@testomatio/reporter": "^2.0.2",
     "@types/node": "^22.15.21",
     "playwright": "^1.52.0",
     "ts-node": "^10.9.2",

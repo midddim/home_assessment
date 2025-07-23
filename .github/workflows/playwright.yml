@@ -5,6 +5,20 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      grep:
+        description: 'Run only tests matching this grep pattern (e.g. @smoke)'
+        required: false
+        default: ''
+      run:
+        description: 'Testomat.io Run ID (for linking results to a specific Run)'
+        required: false
+        default: ''
+      testomatio:
+        description: 'Testomat.io API token (used if not defined in secrets)'
+        required: false
+        default: ''
 
 jobs:
   test:
@@ -18,6 +32,9 @@ jobs:
       TESTRAIL_USERNAME: ${{ vars.TESTRAIL_USERNAME }}
       TESTRAIL_PASSWORD: ${{ vars.TESTRAIL_PASSWORD }}
       TESTRAIL_PROJECT_ID: ${{ vars.TESTRAIL_PROJECT_ID }}
+      TESTOMATIO: ${{ github.event.inputs.testomatio || secrets.TESTOMATIO }}
+      TESTOMATIO_RUN: ${{ github.event.inputs.run }}
+
     steps:
       - uses: actions/checkout@v4
 
@@ -25,7 +42,18 @@ jobs:
         run: npm ci
 
       - name: Run Playwright tests
-        run: npx playwright test
+        run: |
+          if [ "${{ github.event.inputs.grep }}" != "" ]; then
+            npx playwright test --grep "${{ github.event.inputs.grep }}" --reporter=junit
+          else
+            npx playwright test --reporter=junit
+          fi
+
+      - name: Send test results to Testomat.io
+        run: npx @testomatio/reporter --path=test-results/results.xml
+        env:
+          TESTOMATIO: ${{ github.event.inputs.testomatio || secrets.TESTOMATIO }}
+          TESTOMATIO_RUN: ${{ github.event.inputs.run }}
 
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
