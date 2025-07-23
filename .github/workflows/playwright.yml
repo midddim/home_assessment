@@ -63,14 +63,14 @@ jobs:
       - name: Send test results to Testomat.io
         run: |
           if [ -n "$TESTOMATIO" ]; then
-            npx @testomatio/reporter
+            echo "Uploading test results to Testomat.io..."
+            npx @testomatio/reporter xml test-results/results.xml
           else
             echo "TESTOMATIO token not provided, skipping Testomat.io integration"
           fi
         env:
           TESTOMATIO: ${{ github.event.inputs.testomatio || secrets.TESTOMATIO }}
           TESTOMATIO_RUN: ${{ github.event.inputs.run }}
-          TESTOMATIO_REPORT_FILE: test-results/results.xml
 
       - uses: actions/upload-artifact@v4
         if: always()
