@@ -28,10 +28,6 @@ jobs:
       image: mcr.microsoft.com/playwright:v1.52.0-jammy
     env:
       BASE_URL: ${{ vars.BASE_URL }}
-      TESTRAIL_URL: ${{ vars.TESTRAIL_URL }}
-      TESTRAIL_USERNAME: ${{ vars.TESTRAIL_USERNAME }}
-      TESTRAIL_PASSWORD: ${{ vars.TESTRAIL_PASSWORD }}
-      TESTRAIL_PROJECT_ID: ${{ vars.TESTRAIL_PROJECT_ID }}
       TESTOMATIO: ${{ github.event.inputs.testomatio || secrets.TESTOMATIO }}
       TESTOMATIO_RUN: ${{ github.event.inputs.run }}
 
@@ -44,10 +40,16 @@ jobs:
       - name: Run Playwright tests
         run: |
           if [ "${{ github.event.inputs.grep }}" != "" ]; then
-            npx playwright test --grep "${{ github.event.inputs.grep }}" --reporter=junit
+            npx playwright test --grep "${{ github.event.inputs.grep }}"
           else
-            npx playwright test --reporter=junit
+            npx playwright test
           fi
+
+      - name: Debug: list test-results
+        run: ls -la test-results || echo "No test-results dir found"
+
+      - name: Debug: list html report
+        run: ls -la playwright-report || echo "No html report found"
 
       - name: Send test results to Testomat.io
         run: npx @testomatio/reporter --path=test-results/results.xml
