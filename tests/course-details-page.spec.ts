@@ -8,7 +8,7 @@ test.describe('Course Details page', () => {
     );
   });
 
-  test('search for courses on a specific topic @6bffddad', async ({ courseDetailsPage }) => {
+  test('search for courses on a specific topic @bfec13ba', async ({ courseDetailsPage }) => {
     await expect(courseDetailsPage.page.url()).toContain(`/course/quality-assurance-qa-techniques-and-methodologies`);
   });
 });
