@@ -1,13 +1,13 @@
 import { test, expect } from './fixtures';
 
 test.describe("Home page", () => {
-  test('has title', {tag: ['@smoke', '@8ed45828']}, async ({ homePage, page }) => {
+  test('has title', {tag: ['@smoke', '@T63e5e689']}, async ({ homePage, page }) => {
     await homePage.toBeDisplayed();
 
     await expect(page).toHaveTitle('Alison | Free Online Courses & Online Learning'); // TODO Replace text with variable
   });
 
-  test('search for courses on a specific topic', {tag: ['@smoke', '@2a2c9afc']}, async ({ homePage, page }) => {
+  test('search for courses on a specific topic', {tag: ['@smoke', '@T8bd4ee54']}, async ({ homePage, page }) => {
     const searchQuery: string = 'javascript';
 
     await homePage.searchCoursesBy(searchQuery);
@@ -16,7 +16,7 @@ test.describe("Home page", () => {
     expect(page.url(), "URL should end with search query").toContain(`/courses?query=${searchQuery}`);
   });
 
-  test('search for courses on a specific topic with additional params', {tag: ['@smoke', '@5df7b779']}, async ({ homePage, page }) => {
+  test('search for courses on a specific topic with additional params', {tag: ['@smoke', '@T74813399']}, async ({ homePage, page }) => {
     const searchQuery: string = 'javascript';
     const type: string = 'certificate';
 
@@ -26,7 +26,7 @@ test.describe("Home page", () => {
     expect(page.url(), "URL should end with search query").toContain(`/courses?type=${type}&query=${searchQuery}`);
   });
 
-  test('search for courses with "No Results Found" result', {tag: ['@smoke', '@a0e65b8d']}, async ({ homePage, page }) => {
+  test('search for courses with "No Results Found" result', {tag: ['@smoke', '@Ta8493af0']}, async ({ homePage, page }) => {
     const searchQuery: string = '12333221122311';
 
     await homePage.searchCoursesBy(searchQuery);
