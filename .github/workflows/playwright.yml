@@ -61,39 +61,57 @@ jobs:
             npx playwright test
           fi
         continue-on-error: true
+        env:
+          TESTOMATIO: ${{ github.event.inputs.testomatio || secrets.TESTOMATIO }}
+          TESTOMATIO_RUN: ${{ github.event.inputs.run }}
 
-      - name: Send test results to Testomat.io
+      - name: Check generated artifacts
+        if: always()
         run: |
-          if [ -n "$TESTOMATIO" ]; then
-            echo "Uploading test results to Testomat.io..."
-            
-            # Upload XML test results
-            npx @testomatio/reporter xml test-results/results.xml
-            
-            # Upload Playwright artifacts (screenshots, videos, traces)
-            if [ -d "test-results" ]; then
-              echo "Uploading Playwright artifacts to Testomat.io..."
-              
-              # Upload screenshots
-              find test-results -name "*.png" -type f | while read -r file; do
-                echo "Uploading screenshot: $file"
-                npx @testomatio/reporter upload "$file" --type screenshot
-              done
-              
-              # Upload videos
-              find test-results -name "*.webm" -type f | while read -r file; do
-                echo "Uploading video: $file"
-                npx @testomatio/reporter upload "$file" --type video
-              done
-              
-              # Upload traces
-              find test-results -name "*.zip" -type f | while read -r file; do
-                echo "Uploading trace: $file"
-                npx @testomatio/reporter upload "$file" --type trace
-              done
-            fi
+          echo "Checking for generated artifacts..."
+          if [ -d "test-results" ]; then
+            echo "Screenshots:"
+            find test-results -name "*.png" -type f
+            echo "Videos:"
+            find test-results -name "*.webm" -type f
+            echo "Traces:"
+            find test-results -name "*.zip" -type f
           else
-            echo "TESTOMATIO token not provided, skipping Testomat.io integration"
+            echo "No test-results directory found"
+          fi
+
+      - name: Send test results to Testomat.io (if not using reporter)
+        if: env.TESTOMATIO != '' && always()
+        run: |
+          echo "Uploading XML results to Testomat.io..."
+          npx @testomatio/reporter xml test-results/results.xml
+        env:
+          TESTOMATIO: ${{ github.event.inputs.testomatio || secrets.TESTOMATIO }}
+          TESTOMATIO_RUN: ${{ github.event.inputs.run }}
+
+      - name: Upload artifacts to Testomat.io manually
+        if: env.TESTOMATIO != '' && always()
+        run: |
+          if [ -d "test-results" ]; then
+            echo "Manually uploading artifacts to Testomat.io..."
+            
+            # Upload screenshots
+            find test-results -name "*.png" -type f | while read -r file; do
+              echo "Uploading screenshot: $file"
+              npx @testomatio/reporter upload "$file" --type screenshot
+            done
+            
+            # Upload videos
+            find test-results -name "*.webm" -type f | while read -r file; do
+              echo "Uploading video: $file"
+              npx @testomatio/reporter upload "$file" --type video
+            done
+            
+            # Upload traces
+            find test-results -name "*.zip" -type f | while read -r file; do
+              echo "Uploading trace: $file"
+              npx @testomatio/reporter upload "$file" --type trace
+            done
           fi
         env:
           TESTOMATIO: ${{ github.event.inputs.testomatio || secrets.TESTOMATIO }}
