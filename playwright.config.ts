@@ -26,10 +26,6 @@ export default defineConfig({
   reporter: [
     ['junit', { outputFile: 'test-results/results.xml' }],
     ['html', { outputFolder: 'playwright-report', open: 'never' }],
-    ['@testomatio/reporter', {
-      apiToken: process.env.TESTOMATIO || '',
-      runId: process.env.TESTOMATIO_RUN || ''
-    }]
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
