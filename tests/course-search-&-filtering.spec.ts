@@ -23,7 +23,8 @@ test.describe("Home page", () => {
     await homePage.searchCoursesBy(searchQuery);
     await homePage.filterCourseTypeBy(type);
 
-    expect(page.url(), "URL should end with search query").toContain(`/courses?type=${type}&query=${searchQuery}`);
+    expect(page.url(), "URL should end with search query").toContain(`/cours?type=${type}&query=${searchQuery}`);
+    // expect(page.url(), "URL should end with search query").toContain(`/courses?type=${type}&query=${searchQuery}`);
   });
 
   test('search for courses with "No Results Found" result', {tag: ['@smoke', '@Ta8493af0']}, async ({ homePage, page }) => {
