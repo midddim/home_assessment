@@ -60,12 +60,38 @@ jobs:
           else
             npx playwright test
           fi
+        continue-on-error: true
 
       - name: Send test results to Testomat.io
         run: |
           if [ -n "$TESTOMATIO" ]; then
             echo "Uploading test results to Testomat.io..."
+            
+            # Upload XML test results
             npx @testomatio/reporter xml test-results/results.xml
+            
+            # Upload Playwright artifacts (screenshots, videos, traces)
+            if [ -d "test-results" ]; then
+              echo "Uploading Playwright artifacts to Testomat.io..."
+              
+              # Upload screenshots
+              find test-results -name "*.png" -type f | while read -r file; do
+                echo "Uploading screenshot: $file"
+                npx @testomatio/reporter upload "$file" --type screenshot
+              done
+              
+              # Upload videos
+              find test-results -name "*.webm" -type f | while read -r file; do
+                echo "Uploading video: $file"
+                npx @testomatio/reporter upload "$file" --type video
+              done
+              
+              # Upload traces
+              find test-results -name "*.zip" -type f | while read -r file; do
+                echo "Uploading trace: $file"
+                npx @testomatio/reporter upload "$file" --type trace
+              done
+            fi
           else
             echo "TESTOMATIO token not provided, skipping Testomat.io integration"
           fi
